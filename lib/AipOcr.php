@@ -15,7 +15,7 @@
 * the License.
 */
 
-require_once 'lib/AipBase.php';
+require_once 'baseocr/AipBase.php';
 
 class AipOcr extends AipBase {
 

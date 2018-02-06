@@ -20,7 +20,15 @@ define('API_KEY', '');
 define('SECRET_KEY', '');
 //配置
 cookie="";
+
+
 //执行 php >= 5.6
+
 php dog.php
+
+
+
+//新版本
+看心情
 
 ```
