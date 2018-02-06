@@ -35,7 +35,7 @@ foreach($info['data']['petsOnSale'] as $item){
 	if(!$captInfo){
 		continue;
 	}
-	$captcha=call_idl_ocr(base64_decode($captInfo['data']['img']));
+	$captcha=idlOcr(base64_decode($captInfo['data']['img']));
 	if(!$captcha){
 		return '';
 	}
@@ -55,7 +55,7 @@ function buildCmd($url,$origin,$contenttype,$referer,$cookie,$data){
 }
 
 
-function call_idl_ocr($pic_content)
+function idlOcr($pic_content)
 {
 	file_put_contents('ab.png',$pic_content);
 	echo $pic_content;
