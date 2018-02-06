@@ -1,4 +1,4 @@
-#lcg-php
+# lcg-php
 
 采用百度ocr识别验证码,其实效果不好.
 
@@ -13,7 +13,7 @@ https://console.bce.baidu.com/ai/?_=1517904818639#/ai/ocr/overview/index
 500次/天免费
 ````
 
-#修改 dog.php
+# 修改 dog.php
 
 ````
 //api相关内容
@@ -24,7 +24,7 @@ define('SECRET_KEY', '');
 cookie="";
 ````
 
-#执行 php >= 5.6
+# 执行 php >= 5.6
 ````
 php dog.php
 
@@ -43,7 +43,7 @@ php dog.php
 ````
 
 
-#新版本
+# 新版本
 ````
 看心情
 
