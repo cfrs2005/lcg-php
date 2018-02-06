@@ -1,8 +1,27 @@
 # lcg-php
 
-采用百度ocr识别验证码,其实效果不好.
+莱茨狗 黑产服务端代码
+
+# ocr -showapi 
+
+增加验证码 识别率 超过 99% 
+
+https://www.showapi.com/api/sku/184
+注册付费 蛮贵的 我用1分钱 刷到一只狗
+
 
 ````
+vim dog.php
+define('SHOW_API_ID', '');
+define('SHOW_API_SECRET', '');
+define('ORC_FUNC', 'showApiOcr');
+
+````
+
+# ocr - baidu
+
+采用百度ocr识别验证码,其实效果不好.
+
 访问  https://console.bce.baidu.com  找到 文字识别 申请应用即可
 
 申请地址
@@ -11,15 +30,16 @@ https://console.bce.baidu.com/ai/?_=1517904818639#/ai/ocr/overview/index
 创建即可
 
 500次/天免费
-````
 
-# 修改 dog.php
 
 ````
+vim dog.php
+
 //api相关内容
 define('APP_ID', '');
 define('API_KEY', '');
 define('SECRET_KEY', '');
+define('ORC_FUNC', 'idlOcr');
 //配置
 cookie="";
 ````
@@ -27,7 +47,6 @@ cookie="";
 # 执行 php >= 5.6
 ````
 php dog.php
-
 
 2018-02-06 17:22:45	黑产 百度 pet-chain
 2018-02-06 17:22:45	当前价格最大限制为:	1000

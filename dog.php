@@ -1,12 +1,19 @@
 <?php
+set_time_limit(0);
 define('APP_PATH', __DIR__);
 define('ORIGIN', 'https://pet-chain.baidu.com');
 define('JSON', 'application/json');
 define('APP_ID', '');
 define('API_KEY', '');
 define('SECRET_KEY', '');
-define('MAX_AMOUNT', 1000);
+
+define('SHOW_API_ID', '');
+define('SHOW_API_SECRET', '');
+
+define('ORC_FUNC', 'showApiOcr');
+define('MAX_AMOUNT', 2000);
 require_once __DIR__ . '/lib/AipOcr.php';
+require_once __DIR__ . '/lib/ShowOcr.php';
 
 
 help();
@@ -24,10 +31,11 @@ if (!isset($output[0])) {
 $info = json_decode($output[0], true);
 $output = [];
 foreach ($info['data']['petsOnSale'] as $item) {
+    _log($item['petId'] . "\t价格:\t" . $item['amount']);
     if (intval($item['amount']) > MAX_AMOUNT) {
-        _log($item['petId'] . "\t价格:\t" . $item['amount']);
         continue;
     }
+    _log("执行买入\t" . $item['petId']);
     $petUrl = "https://pet-chain.baidu.com/chain/detail?channel=market&petId=" . $item['petId'] . "&validCode=" . $item['validCode'];
     $getCaptcha = 'https://pet-chain.baidu.com/data/captcha/gen';
     $cmd = buildCmd($getCaptcha, ORIGIN, JSON, $petUrl, $cookie, ['requestId' => $time, 'appId' => 1, 'tpl' => '']);
@@ -36,7 +44,7 @@ foreach ($info['data']['petsOnSale'] as $item) {
     if (!$captInfo) {
         continue;
     }
-    $captcha = idlOcr(base64_decode($captInfo['data']['img']));
+    $captcha = call_user_func(ORC_FUNC, base64_decode($captInfo['data']['img']));
     if (!$captcha) {
         _log("empty captcha,识别失败");
         continue;
@@ -46,7 +54,16 @@ foreach ($info['data']['petsOnSale'] as $item) {
     $submitData = ['petId' => $item['petId'], 'amount' => $item['amount'], 'seed' => $captInfo['data']['seed'], 'captcha' => $captcha, 'validCode' => $item['validCode'], 'requestId' => $time, 'appId' => 1, 'tpl' => ''];
     $cmd = buildCmd($submitUrl, ORIGIN, JSON, $petUrl, $cookie, $submitData);
     @exec($cmd, $output, $return_arr);
-    _log(@json_encode($output[1]));
+    $result = @json_decode($output[1], true);
+    if ($result) {
+        if (@$result['errorNo'] > 10000) {
+            _log("执行买入\t" . $item['petId'] . "\t失败\t" . $result['errorMsg']);
+        } else {
+            _log("执行买入\t" . $item['petId'] . "\t成功" . $result['errorMsg']);
+        }
+    } else {
+        _log('service 500');
+    }
 }
 
 
@@ -73,6 +90,7 @@ function buildCmd($url, $origin, $contenttype, $referer, $cookie, $data)
 }
 
 /**
+ * 百度
  * @param $pic_content
  * @return string
  */
@@ -90,6 +108,16 @@ function idlOcr($pic_content)
     return '';
 }
 
+/**
+ * show api
+ * @param $pic_content
+ * @return string
+ */
+function showApiOcr($pic_content)
+{
+    $showOcr = new ShowOcr(SHOW_API_ID, SHOW_API_SECRET);
+    return $showOcr->getCaptcha(base64_encode($pic_content));
+}
 
 /**
  * @param $str
