@@ -11,6 +11,7 @@ define('SHOW_API_ID', '');
 define('SHOW_API_SECRET', '');
 
 define('ORC_FUNC', 'showApiOcr');
+define('MIN_AMOUNT', 1);
 define('MAX_AMOUNT', 2000);
 require_once __DIR__ . '/lib/AipOcr.php';
 require_once __DIR__ . '/lib/ShowOcr.php';
@@ -32,7 +33,7 @@ $info = json_decode($output[0], true);
 $output = [];
 foreach ($info['data']['petsOnSale'] as $item) {
     _log($item['petId'] . "\t价格:\t" . $item['amount']);
-    if (intval($item['amount']) > MAX_AMOUNT) {
+    if (intval($item['amount']) > MAX_AMOUNT || intval($item['amount']) <= MIN_AMOUNT) {
         continue;
     }
     _log("执行买入\t" . $item['petId']);
