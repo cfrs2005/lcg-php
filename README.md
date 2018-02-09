@@ -2,6 +2,37 @@
 
 莱茨狗 黑产服务端代码
 
+目前看来  莱茨狗 开发速度较慢，不如外面的山寨
+
+应该是团队rd 按自己的想法做的，目前看来 进度慢，简单的完善交易流程都有没有，投入有限，而且没什么可玩的。
+
+
+
+还不如安心的去刷2个公信宝。 好歹1天也几块钱
+
+推广注册链接：
+
+https://blockcity.gxshares.org/#/?referUser=giTNP2MOZZPqUGTCVt10355330406 
+
+尚未支持提现，不建议绑定 支付宝之类的 授权信息
+
+可交易平台
+
+https://big.one
+
+
+
+
+# 增加品种提示
+
+增加查询数量 ，增加查询 规则配置
+
+````
+// sort 类型  "CREATETIME_DESC","CREATETIME_ASC","AMOUNT_ASC","AMOUNT_DESC"
+define('SORT_TYPE','CREATETIME_DESC');
+//目前只能到20
+````
+
 # ocr -showapi 
 
 增加验证码 识别率 超过 99% 

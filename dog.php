@@ -13,14 +13,21 @@ define('SHOW_API_SECRET', '');
 define('ORC_FUNC', 'showApiOcr');
 define('MIN_AMOUNT', 1);
 define('MAX_AMOUNT', 2000);
+define('RareDegree',1);
+// sort 类型  "CREATETIME_DESC","CREATETIME_ASC","AMOUNT_ASC","AMOUNT_DESC"
+define('SORT_TYPE','CREATETIME_DESC');
+//目前只能到20
+define('SIZE_PAGE',20)
 require_once __DIR__ . '/lib/AipOcr.php';
 require_once __DIR__ . '/lib/ShowOcr.php';
 
 
 help();
 $cookie = "";
+$petDegree=['普通','稀有','卓越','史诗','神话'];
 $time = time() . '451';
-$data = ["pageNo" => 1, "pageSize" => 10, "querySortType" => "AMOUNT_ASC", "petIds" => [], "lastAmount" => null, "lastRareDegree" => null, "requestId" => $time, "appId" => 1, "tpl" => ""];
+
+$data = ["pageNo" => 1, "pageSize" => SIZE_PAGE, "querySortType" => SORT_TYPE, "petIds" => [], "lastAmount" => null, "lastRareDegree" => null, "requestId" => $time, "appId" => 1, "tpl" => ""];
 $listPetUrl = 'https://pet-chain.baidu.com/data/market/queryPetsOnSale';
 $cmd = buildCmd($listPetUrl, ORIGIN, JSON, ORIGIN, $cookie, $data);
 
@@ -32,15 +39,18 @@ if (!isset($output[0])) {
 $info = json_decode($output[0], true);
 $output = [];
 foreach ($info['data']['petsOnSale'] as $item) {
-    _log($item['petId'] . "\t价格:\t" . $item['amount']);
+    _log($item['petId'] ."\t品种:\t".@$petDegree[$item['rareDegree']]. "\t价格:\t" . $item['amount']);
     if (intval($item['amount']) > MAX_AMOUNT || intval($item['amount']) <= MIN_AMOUNT) {
         continue;
     }
     _log("执行买入\t" . $item['petId']);
     $petUrl = "https://pet-chain.baidu.com/chain/detail?channel=market&petId=" . $item['petId'] . "&validCode=" . $item['validCode'];
+    _log($petUrl);
     $getCaptcha = 'https://pet-chain.baidu.com/data/captcha/gen';
     $cmd = buildCmd($getCaptcha, ORIGIN, JSON, $petUrl, $cookie, ['requestId' => $time, 'appId' => 1, 'tpl' => '']);
+    _log($cmd);
     @exec($cmd, $output, $return_arr);
+    _log(serialize($output[0]));
     $captInfo = @json_decode($output[0], true);
     if (!$captInfo) {
         continue;
@@ -60,7 +70,7 @@ foreach ($info['data']['petsOnSale'] as $item) {
         if (@$result['errorNo'] > 10000) {
             _log("执行买入\t" . $item['petId'] . "\t失败\t" . $result['errorMsg']);
         } else {
-            _log("执行买入\t" . $item['petId'] . "\t成功" . $result['errorMsg']);
+            _log("执行买入\t" . $item['petId'] . "\t成功\t" . $result['errorMsg']);
         }
     } else {
         _log('service 500');
@@ -71,7 +81,7 @@ foreach ($info['data']['petsOnSale'] as $item) {
 function help()
 {
     _log('黑产 百度 pet-chain');
-    _log("当前价格最大限制为:\t" . MAX_AMOUNT);
+    _log("当前允许购买 价格区间为:\t".MIN_AMOUNT."\t ~ \t" . MAX_AMOUNT);
 }
 
 /**
