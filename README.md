@@ -25,12 +25,16 @@ https://big.one
 
 # 增加品种提示
 
-增加查询数量 ，增加查询 规则配置
+增加查询分页数量 ，增加查询类型
 
 ````
-// sort 类型  "CREATETIME_DESC","CREATETIME_ASC","AMOUNT_ASC","AMOUNT_DESC"
+// sort 查询类型类型    
+// 支持  "CREATETIME_DESC","CREATETIME_ASC","AMOUNT_ASC","AMOUNT_DESC"
 define('SORT_TYPE','CREATETIME_DESC');
+
 //目前只能到20
+define('SIZE_PAGE',20)
+
 ````
 
 # ocr -showapi 
